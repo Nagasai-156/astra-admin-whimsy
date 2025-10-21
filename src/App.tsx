@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Problems from "./pages/Problems";
 import AddProblem from "./pages/AddProblem";
+import EditProblem from "./pages/EditProblem";
 import Users from "./pages/Users";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/problems" element={<Problems />} />
           <Route path="/problems/add" element={<AddProblem />} />
+          <Route path="/problems/edit/:id" element={<EditProblem />} />
           <Route path="/users" element={<Users />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />

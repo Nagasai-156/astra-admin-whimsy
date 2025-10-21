@@ -6,8 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { ViewProblemDialog } from "@/components/problems/ViewProblemDialog";
+import { DeleteProblemDialog } from "@/components/problems/DeleteProblemDialog";
+import { toast } from "sonner";
 
-const problems = [
+interface Problem {
+  id: number;
+  title: string;
+  language: string;
+  difficulty: string;
+  tags: string[];
+  submissions: number;
+  solved: number;
+}
+
+const initialProblems: Problem[] = [
   {
     id: 1,
     title: "Two Sum Problem",
@@ -53,8 +66,46 @@ const difficultyColors = {
 };
 
 export default function Problems() {
+  const [problems, setProblems] = useState<Problem[]>(initialProblems);
   const [searchQuery, setSearchQuery] = useState("");
+  const [viewProblem, setViewProblem] = useState<Problem | null>(null);
+  const [deleteProblem, setDeleteProblem] = useState<Problem | null>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Filter problems based on search query
+  const filteredProblems = problems.filter(
+    (problem) =>
+      problem.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      problem.language.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      problem.tags.some((tag) =>
+        tag.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+  );
+
+  const handleView = (problem: Problem) => {
+    setViewProblem(problem);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEdit = (problemId: number) => {
+    navigate(`/problems/edit/${problemId}`);
+  };
+
+  const handleDeleteClick = (problem: Problem) => {
+    setDeleteProblem(problem);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (deleteProblem) {
+      setProblems(problems.filter((p) => p.id !== deleteProblem.id));
+      toast.success(`"${deleteProblem.title}" deleted successfully!`);
+      setIsDeleteDialogOpen(false);
+      setDeleteProblem(null);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -106,7 +157,18 @@ export default function Problems() {
 
         {/* Problems Grid */}
         <div className="grid gap-6">
-          {problems.map((problem, index) => (
+          {filteredProblems.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="funky-card p-12 text-center"
+            >
+              <p className="text-xl text-muted-foreground">
+                No problems found matching "{searchQuery}"
+              </p>
+            </motion.div>
+          ) : (
+            filteredProblems.map((problem, index) => (
             <motion.div
               key={problem.id}
               initial={{ opacity: 0, y: 20 }}
@@ -154,29 +216,49 @@ export default function Problems() {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="w-10 h-10 rounded-xl hover:bg-primary hover:text-primary-foreground"
+                    onClick={() => handleView(problem)}
+                    className="w-10 h-10 rounded-xl hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                    title="View details"
                   >
                     <Eye className="w-4 h-4" />
                   </Button>
                   <Button
                     variant="outline"
                     size="icon"
-                    className="w-10 h-10 rounded-xl hover:bg-secondary hover:text-secondary-foreground"
+                    onClick={() => handleEdit(problem.id)}
+                    className="w-10 h-10 rounded-xl hover:bg-secondary hover:text-secondary-foreground transition-all duration-300"
+                    title="Edit problem"
                   >
                     <Edit className="w-4 h-4" />
                   </Button>
                   <Button
                     variant="outline"
                     size="icon"
-                    className="w-10 h-10 rounded-xl hover:bg-destructive hover:text-destructive-foreground"
+                    onClick={() => handleDeleteClick(problem)}
+                    className="w-10 h-10 rounded-xl hover:bg-destructive hover:text-destructive-foreground transition-all duration-300"
+                    title="Delete problem"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
             </motion.div>
-          ))}
+            ))
+          )}
         </div>
+
+        {/* Dialogs */}
+        <ViewProblemDialog
+          problem={viewProblem}
+          open={isViewDialogOpen}
+          onOpenChange={setIsViewDialogOpen}
+        />
+        <DeleteProblemDialog
+          problem={deleteProblem}
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
+          onConfirm={handleDeleteConfirm}
+        />
       </motion.div>
     </DashboardLayout>
   );
