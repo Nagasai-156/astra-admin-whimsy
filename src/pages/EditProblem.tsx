@@ -32,7 +32,7 @@ export default function EditProblem() {
   const { id } = useParams();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    language: "Python",
+    language: ["Python"] as string[],
     title: "Two Sum Problem",
     category: "",
     difficulty: "Easy",
@@ -113,10 +113,15 @@ export default function EditProblem() {
           {step === 1 && (
             <div className="space-y-6">
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold mb-2">Select Language</h2>
+                <h2 className="text-2xl font-bold mb-2">Select Languages</h2>
                 <p className="text-muted-foreground">
-                  Choose the programming language for this problem
+                  Choose one or more programming languages for this problem
                 </p>
+                {formData.language.length > 0 && (
+                  <p className="text-sm text-primary mt-2">
+                    Selected: {formData.language.join(", ")}
+                  </p>
+                )}
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {languages.map((lang) => (
@@ -124,9 +129,15 @@ export default function EditProblem() {
                     key={lang}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setFormData({ ...formData, language: lang })}
+                    onClick={() => {
+                      const isSelected = formData.language.includes(lang);
+                      const newLanguages = isSelected
+                        ? formData.language.filter((l) => l !== lang)
+                        : [...formData.language, lang];
+                      setFormData({ ...formData, language: newLanguages });
+                    }}
                     className={`p-6 rounded-2xl border-2 transition-all duration-300 ${
-                      formData.language === lang
+                      formData.language.includes(lang)
                         ? "border-primary bg-primary/10 shadow-lg"
                         : "border-border hover:border-primary/50"
                     }`}
