@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   User,
@@ -10,6 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -20,6 +21,12 @@ const navItems = [
 ];
 
 export const Sidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    toast.success("Logged out successfully!");
+    navigate("/");
+  };
   return (
     <motion.aside
       initial={{ x: -280 }}
@@ -82,6 +89,7 @@ export const Sidebar = () => {
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        onClick={handleLogout}
         className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all duration-300"
       >
         <LogOut className="w-5 h-5" />

@@ -206,6 +206,19 @@ export default function EditProblem() {
               <Button
                 variant="outline"
                 className="w-full h-12 rounded-2xl border-dashed"
+                onClick={() => {
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = 'image/*';
+                  input.multiple = true;
+                  input.onchange = (e) => {
+                    const files = (e.target as HTMLInputElement).files;
+                    if (files && files.length > 0) {
+                      toast.success(`${files.length} image(s) selected`);
+                    }
+                  };
+                  input.click();
+                }}
               >
                 <Upload className="w-5 h-5 mr-2" />
                 Upload Images

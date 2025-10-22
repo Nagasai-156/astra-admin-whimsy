@@ -53,6 +53,18 @@ export default function Profile() {
           <div className="flex flex-col items-center mb-8">
             <motion.div
               whileHover={{ scale: 1.05 }}
+              onClick={() => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = (e) => {
+                  const file = (e.target as HTMLInputElement).files?.[0];
+                  if (file) {
+                    toast.success("Profile photo updated!");
+                  }
+                };
+                input.click();
+              }}
               className="relative group cursor-pointer"
             >
               <Avatar className="w-32 h-32 border-4 border-primary/20 shadow-xl">
@@ -155,18 +167,21 @@ export default function Profile() {
           <div className="space-y-4">
             <Button
               variant="outline"
+              onClick={() => toast.info("Change password feature coming soon!")}
               className="w-full h-12 rounded-2xl justify-start"
             >
               Change Password
             </Button>
             <Button
               variant="outline"
+              onClick={() => toast.info("2FA feature coming soon!")}
               className="w-full h-12 rounded-2xl justify-start"
             >
               Enable Two-Factor Authentication
             </Button>
             <Button
               variant="outline"
+              onClick={() => toast.info("Login history feature coming soon!")}
               className="w-full h-12 rounded-2xl justify-start"
             >
               View Login History

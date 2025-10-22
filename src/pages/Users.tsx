@@ -6,8 +6,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
-const users = [
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  status: string;
+  problems: number;
+  submissions: number;
+  joined: string;
+}
+
+const initialUsers: User[] = [
   {
     id: 1,
     name: "Alice Johnson",
@@ -48,6 +59,22 @@ const users = [
 
 export default function Users() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [users, setUsers] = useState<User[]>(initialUsers);
+
+  const handleToggleStatus = (userId: number) => {
+    setUsers(users.map(user => {
+      if (user.id === userId) {
+        const newStatus = user.status === "active" ? "blocked" : "active";
+        toast.success(`User ${newStatus === "blocked" ? "blocked" : "unblocked"} successfully!`);
+        return { ...user, status: newStatus };
+      }
+      return user;
+    }));
+  };
+
+  const handleMoreActions = (userName: string) => {
+    toast.info(`More actions for ${userName} coming soon!`);
+  };
 
   return (
     <DashboardLayout>
@@ -81,6 +108,7 @@ export default function Users() {
             <Button
               variant="outline"
               className="h-12 px-6 rounded-2xl border-2 hover:border-primary hover:bg-primary/5"
+              onClick={() => toast.info("Filter feature coming soon!")}
             >
               <Filter className="w-5 h-5 mr-2" />
               Filters
@@ -178,7 +206,9 @@ export default function Users() {
                           <Button
                             variant="outline"
                             size="icon"
+                            onClick={() => handleToggleStatus(user.id)}
                             className="w-9 h-9 rounded-xl hover:bg-destructive hover:text-destructive-foreground"
+                            title="Block user"
                           >
                             <Ban className="w-4 h-4" />
                           </Button>
@@ -186,7 +216,9 @@ export default function Users() {
                           <Button
                             variant="outline"
                             size="icon"
+                            onClick={() => handleToggleStatus(user.id)}
                             className="w-9 h-9 rounded-xl hover:bg-primary hover:text-primary-foreground"
+                            title="Unblock user"
                           >
                             <CheckCircle className="w-4 h-4" />
                           </Button>
@@ -194,7 +226,9 @@ export default function Users() {
                         <Button
                           variant="outline"
                           size="icon"
+                          onClick={() => handleMoreActions(user.name)}
                           className="w-9 h-9 rounded-xl"
+                          title="More actions"
                         >
                           <MoreVertical className="w-4 h-4" />
                         </Button>

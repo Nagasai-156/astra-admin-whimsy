@@ -148,6 +148,7 @@ export default function Problems() {
             <Button
               variant="outline"
               className="h-12 px-6 rounded-2xl border-2 hover:border-primary hover:bg-primary/5"
+              onClick={() => toast.info("Filter feature coming soon!")}
             >
               <Filter className="w-5 h-5 mr-2" />
               Filters

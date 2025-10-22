@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Bell, Shield, Palette, Globe } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 const settingsGroups = [
   {
@@ -44,6 +46,28 @@ const settingsGroups = [
 ];
 
 export default function Settings() {
+  const [settings, setSettings] = useState<Record<string, boolean>>({
+    "email-notif": true,
+    "push-notif": false,
+    "weekly-report": true,
+    "2fa": false,
+    "session-timeout": true,
+    "login-alerts": true,
+    "dark-mode": false,
+    "compact-view": false,
+    "animations": true,
+    "maintenance": false,
+    "public-signup": true,
+    "api-access": true,
+  });
+
+  const handleToggle = (id: string) => {
+    setSettings(prev => {
+      const newValue = !prev[id];
+      toast.success(`${id.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} ${newValue ? 'enabled' : 'disabled'}`);
+      return { ...prev, [id]: newValue };
+    });
+  };
   return (
     <DashboardLayout>
       <motion.div
@@ -93,7 +117,11 @@ export default function Settings() {
                     >
                       {setting.label}
                     </Label>
-                    <Switch id={setting.id} defaultChecked={setting.enabled} />
+                    <Switch 
+                      id={setting.id} 
+                      checked={settings[setting.id]} 
+                      onCheckedChange={() => handleToggle(setting.id)}
+                    />
                   </motion.div>
                 ))}
               </div>

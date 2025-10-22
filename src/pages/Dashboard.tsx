@@ -194,15 +194,16 @@ export default function Dashboard() {
           <h2 className="text-xl font-bold mb-6">Quick Actions</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { icon: Code2, label: "Add Problem", color: "primary" },
-              { icon: Users, label: "View Users", color: "secondary" },
-              { icon: Target, label: "Analytics", color: "accent" },
-              { icon: TrendingUp, label: "Reports", color: "primary" },
+              { icon: Code2, label: "Add Problem", color: "primary", path: "/problems/add" },
+              { icon: Users, label: "View Users", color: "secondary", path: "/users" },
+              { icon: Target, label: "Analytics", color: "accent", path: "/dashboard" },
+              { icon: TrendingUp, label: "Reports", color: "primary", path: "/dashboard" },
             ].map((action, index) => (
               <motion.button
                 key={action.label}
                 whileHover={{ scale: 1.05, y: -4 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => window.location.href = action.path}
                 className="p-4 rounded-2xl bg-muted hover:bg-primary hover:text-primary-foreground transition-all duration-300 group"
               >
                 <action.icon className="w-8 h-8 mx-auto mb-2 group-hover:animate-bounce-in" />

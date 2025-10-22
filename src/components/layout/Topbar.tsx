@@ -3,8 +3,11 @@ import { Bell, Search } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const Topbar = () => {
+  const navigate = useNavigate();
   return (
     <motion.header
       initial={{ y: -80 }}
@@ -28,6 +31,7 @@ export const Topbar = () => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          onClick={() => toast.info("You have 3 new notifications!")}
           className="relative w-12 h-12 rounded-2xl bg-muted flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all duration-300"
         >
           <Bell className="w-5 h-5" />
@@ -39,6 +43,7 @@ export const Topbar = () => {
         {/* Profile */}
         <motion.div
           whileHover={{ scale: 1.02 }}
+          onClick={() => navigate("/profile")}
           className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-muted cursor-pointer hover:bg-muted/70 transition-all duration-300"
         >
           <Avatar className="w-10 h-10 border-2 border-primary/20">
